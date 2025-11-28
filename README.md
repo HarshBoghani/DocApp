@@ -1,8 +1,8 @@
 # Doctor Appointment Booking 
  
-# DocEasy  
+# DocApp  
 
-DocEasy is a simple and intuitive doctor appointment booking platform designed to connect patients with trusted healthcare providers effortlessly.
+DocApp is a simple and intuitive doctor appointment booking platform designed to connect patients with trusted healthcare providers effortlessly.
 
 ## 🌟 Features
 
@@ -34,13 +34,6 @@ DocEasy is a simple and intuitive doctor appointment booking platform designed t
 
 ---
 
-### 💳 Payment Integration
-- Integrated payment gateway (e.g., Razorpay).
-- Patients can pay consultation fees securely.
-- Backend verifies transactions and updates appointment status.
-
----
-
 ### 📊 Dashboard & Analytics
 - 📍 Role-specific dashboards:
   - Patients: Upcoming and past appointments.
@@ -63,7 +56,7 @@ DocEasy is a simple and intuitive doctor appointment booking platform designed t
 # Clone the repository
 
 # Navigate to the project directory
-cd DocEasy
+cd DocApp
 
 # Backend setup
 cd backend

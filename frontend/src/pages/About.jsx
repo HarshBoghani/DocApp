@@ -18,12 +18,12 @@ const About = () => {
         />
         <div className="flex flex-col justify-center gap-6 md:w-2/4 text-sm text-gray-600 ">
           <p>
-            At DocEasy, we believe that accessing quality healthcare should be
+            At DocApp, we believe that accessing quality healthcare should be
             simple, seamless, and stress-free. Founded with a mission to
             transform the way people connect with medical professionals, our
             platform bridges the gap between patients and doctors, ensuring
             timely appointments. Whether you’re looking for a
-            general physician or a specialist, DocEasy is your trusted partner
+            general physician or a specialist, DocApp is your trusted partner
             in finding the right healthcare provider quickly and efficiently.
           </p>
           <p>
@@ -37,7 +37,7 @@ const About = () => {
             everyone, regardless of location or time. By leveraging technology,
             we aim to eliminate the barriers between patients and doctors,
             fostering a healthier and more connected society. We envision
-            DocEasy as a global leader in healthcare solutions, setting a new
+            DocApp as a global leader in healthcare solutions, setting a new
             standard for convenience, reliability, and trust in medical
             services. 
           </p>

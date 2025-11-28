@@ -2,10 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-import {useNavigate} from 'react-router-dom'
 const MyAppointment = () => {
   const { backendUrl, token,getDoctorsData } = useContext(AppContext);
-const navigate = useNavigate();
 
   const [appointments, setAppointments] = useState([]);
 const months = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -54,57 +52,6 @@ const cancelAppointment = async (appointmentId)=>{
 }
 }
 
-const initPay = (order)=>{
-  const options= {
-key:import.meta.env.RAZORPAY_KEY_ID,
-amount:order.amount,
-currency: order.currency,
-name:'Appointment Payment',
-description:'Appointment Payment',
-order_id:order.id,
-receipt:order.receipt,
-handler:async (response)=>{
-// console.log((response));
-try{
-const {data} = await axios.post(backendUrl+'/api/user/verifyRazorpay',{response},{headers:{token}})
-if(data.success){
-  getUserAppointments()
-  navigate('/my-appointments')
-}
-
-}
-catch(e){
-  console.log(e)
-  toast.error(e.message)
-}
-
-
-}
-  }
-
-  const rzp = new window.Razorpay(options)
-  rzp.open()
-}
-
-const AppointmentRazorpay = async (appointmentId)=>{
-
-try{
-
-const {data} =await axios.post(backendUrl+'/api/user/payment-razorpay',{appointmentId},{headers:{token}})
-if(data.success){
-  // console.log(data.order)
-initPay(data.order)
-}
-
-}
-catch(e){
-  console.log(e)
-  toast.error(e)  
-}
-
-}
-
-
   useEffect(() => {
     if (token) {
       getUserAppointments();
@@ -145,18 +92,38 @@ catch(e){
             </div>
             <div></div>
             <div className="flex flex-col gap-2 justify-end">
-              {
-                !item.cancelled && item.payment && !item.isCompleted &&  <button className="sm:min-w-48 py-2 border rounded text-stone-500 bg-indigo-500">Paid</button>
-              }
-              {!item.cancelled && !item.payment && !item.isCompleted && <button onClick={()=>AppointmentRazorpay(item._id)} className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-rounded border-gray-500 hover:bg-primary hover:text-white transition-all duration-105">
-                Pay Online{" "}
-              </button>}
-             {!item.cancelled  && !item.isCompleted &&  <button onClick={()=>cancelAppointment(item._id)} className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-rounded border-gray-500 hover:bg-red-600 hover:text-white transition-all duration-105">
-                Cancel Appointment
-              </button>
-          }
-          {item.cancelled && !item.isCompleted && <button className="sm:min-w-48 py-2 border border-red-500 rounded text-red-500">Appointment cancelled </button>}
-          {item.isCompleted && <button className="sm:min-w-48 py-2 border border-green-500 rounded text-green-500">Completed </button>}
+              {item.cancelled ? (
+                <button className="sm:min-w-48 py-2 border border-red-500 rounded text-red-500">
+                  Appointment cancelled
+                </button>
+              ) : item.isCompleted ? (
+                <>
+                  <p className="text-sm text-green-600 text-center sm:min-w-48 py-2 border border-green-500 rounded">
+                    Payment received
+                  </p>
+                  <button className="sm:min-w-48 py-2 border border-green-500 rounded text-green-600">
+                    Completed
+                  </button>
+                </>
+              ) : (
+                <>
+                  {item.payment ? (
+                    <p className="text-sm text-green-600 text-center sm:min-w-48 py-2 border border-green-500 rounded">
+                      Payment received
+                    </p>
+                  ) : (
+                    <p className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-500 rounded">
+                      Payment pending
+                    </p>
+                  )}
+                  <button
+                    onClick={() => cancelAppointment(item._id)}
+                    className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border border-gray-500 rounded hover:bg-red-600 hover:text-white transition-all duration-105"
+                  >
+                    Cancel Appointment
+                  </button>
+                </>
+              )}
             </div>
           </div>
         ))}

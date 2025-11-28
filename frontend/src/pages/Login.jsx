@@ -14,6 +14,7 @@ const [name,setName] = useState('')
 const navigate = useNavigate()
 
 const {backendUrl,token,setToken} = useContext(AppContext)
+const adminPanelUrl = import.meta.env.VITE_ADMIN_PANEL_URL || 'http://localhost:5174'
 
 const onSubmitHandler=async (event)=>{
   event.preventDefault(); // whenever we submit form it'll not Reload the page 
@@ -37,6 +38,11 @@ else{
   const {data} = await axios.post(backendUrl+'/api/user/login',{email,password})
       
   if(data.success){
+    if(data.role==='admin'){
+      localStorage.setItem('atoken',data.token)
+      window.location.href = adminPanelUrl
+      return
+    }
     localStorage.setItem('token',data.token)
     setToken(data.token)
   }

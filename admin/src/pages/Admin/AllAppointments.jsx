@@ -7,7 +7,7 @@ import { assets } from '../../assets/assets'
 
 
 const AllAppointments = () => {
-const {atoken,getAllAppointments,appointments,cancelAppointment} = useContext(AdminContext)
+const {atoken,getAllAppointments,appointments,cancelAppointment,completeAppointment} = useContext(AdminContext)
 const {calculateAge,slotDateFormat,currencySymbol} = useContext(AppContext)
 
 
@@ -56,9 +56,15 @@ useEffect(()=>{
           : 
           item.isCompleted 
           ?
-          <p className='text-green-400 text-sm font-medium'>Complted</p>
+          <p className='text-green-500 text-sm font-medium flex items-center gap-2'>
+            <img className='w-5' src={assets.tick_icon} alt="" />
+            Completed
+          </p>
           :
-          <img onClick={()=> cancelAppointment(item._id) }   className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
+          <div className='flex gap-3 items-center'>
+            <img onClick={()=> completeAppointment(item._id)} className='w-9 cursor-pointer hover:scale-105 transition' src={assets.tick_icon} alt="Mark Done" title='Mark appointment as done' />
+            <img onClick={()=> cancelAppointment(item._id) }   className='w-9 cursor-pointer hover:scale-105 transition' src={assets.cancel_icon} alt="" title='Cancel appointment' />
+          </div>
 
 
       }

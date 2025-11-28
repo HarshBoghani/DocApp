@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken'
 import {v2 as cloudinary} from 'cloudinary'
 import doctorModel from '../models/doctorModel.js'
 import appointmentModel from '../models/appointmentModel.js'
-import razorpay from 'razorpay'
 
 //api to register user
 
@@ -63,6 +62,15 @@ try{
 
     const {email,password} = req.body
 
+    if(email===process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD){
+        const adminToken = jwt.sign(email+password,process.env.JWT_SECRET)
+        return res.json({
+            success:true,
+            role:'admin',
+            token:adminToken
+        })
+    }
+
     const user = await userModel.findOne({email})
     if(!user) {
         return res.json({success:false,msg:"User does not exist"})
@@ -73,6 +81,7 @@ try{
         const token = jwt.sign({id:user._id},process.env.JWT_SECRET)
         res.json({
             success:true,
+            role:'user',
             token:token
         })
     }
@@ -277,68 +286,4 @@ catch(e){
  }
 
 
-const razorpayInstance = new razorpay({
-    key_id:process.env.RAZORPAY_KEY_ID,
-    key_secret:process.env.RAZORPAY_KEY_SECRET
-})
-
- //API for payment gateway
-
-
-const paymentRazorpay = async (req,res)=>{
-try{
-const {appointmentId} = req.body
-const appointmentData = await appointmentModel.findById(appointmentId)  
-
-if(!appointmentData || appointmentData.cancelled){
-    return res.json({success:false,msg:"Appointment not found"})
-}
-
-// creating options for payments
-
-const options = {
-    amount : appointmentData.amount*100,
-    currency : process.env.CURRENCY,
-    receipt: appointmentId,
-}
-
-//creating order for payment
-const order = await razorpayInstance.orders.create(options)
-res.json({success:true,order})
-
-}
-
-
-catch(e){
-    console.log(e)
-    res.json({success:false,msg:e})
-}
-
-}
-
-
-//API To verify payment of razorpay
-
-const verifyRazopay = async (req,res)=>{
-    try{
-const {razorpay_order_id} =req.body;
-const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
-
-// console.log(orderInfo);
-if(orderInfo.status=='paid'){
-    await appointmentModel.findByIdAndUpdate(orderInfo.receipt,{payment:true})
-    res.json({success:true,msg:"Payment successfull"})
-}
-else{
-    res.json({success:false,msg:"payment failed"})
-}
-
-    }
-    catch(e){
-        console.log(e)
-        res.json({success:false,msg:e})
-    }
-}
-
-
-export {registerUser,userLogin,paymentRazorpay,getProfile,updateProfile,bookAppointment,listAppointment,cancelAppointment,verifyRazopay}
+export {registerUser,userLogin,getProfile,updateProfile,bookAppointment,listAppointment,cancelAppointment}

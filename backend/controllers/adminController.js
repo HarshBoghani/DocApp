@@ -159,6 +159,25 @@ const appointmentCancel = async (req,res)=>{
     }
     
      }
+
+const appointmentComplete = async (req,res)=>{
+    try{
+        const {appointmentId} = req.body
+        const appointmentData = await appointmentModel.findById(appointmentId)
+        if(!appointmentData){
+            return res.json({success:false,msg:"Appointment not found"})
+        }
+        if(appointmentData.cancelled){
+            return res.json({success:false,msg:"Cancelled appointment cannot be marked done"})
+        }
+        await appointmentModel.findByIdAndUpdate(appointmentId,{payment:true,isCompleted:true})
+        res.json({success:true,msg:"Appointment marked as completed"})
+    }
+    catch(e){
+        console.log(e)
+        res.json({success:false,msg:"Failed to update appointment"})
+    }
+}
     
 //API for dashboard for admin panel
 
@@ -205,4 +224,4 @@ const removeDoctor = async (req, res) => {
     res.status(500).json({ success: false, msg: e.message });
   }
 };
-export {addDoctor,adminDashboard,loginAdmin,allDoctors,appointmentCancel,appointmentsAdmin,removeDoctor}
+export {addDoctor,adminDashboard,loginAdmin,allDoctors,appointmentCancel,appointmentsAdmin,removeDoctor,appointmentComplete}

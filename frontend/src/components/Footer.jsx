@@ -17,8 +17,8 @@ const Footer = () => {
           <img className="mb-5 w-40" src={assets.logo} alt="" />
           <p className="w-full md:w-2/3 text-gray-600 leading-6">
             {" "}
-            DocEasy is an intuitive and user-friendly doctor appointment booking
-            platform designed to simplify healthcare access. With DocEasy,
+            DocApp is an intuitive and user-friendly doctor appointment booking
+            platform designed to simplify healthcare access. With DocApp,
             patients can effortlessly find, book, and manage appointments with
             doctors across various specialties. The platform features advanced
             search filters, enabling users to find doctors based on location,
